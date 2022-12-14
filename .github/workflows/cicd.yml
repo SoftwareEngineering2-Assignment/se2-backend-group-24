@@ -36,7 +36,7 @@ jobs:
           script: |
             cd ~/se2/24/se2-backend-group-24
             git reset --hard origin/main
-            git pull https://${{ secrets.CLONE_TOKEN}}@github.com/SoftwareEgnineering2-Assignment/se2-backend-group-24 main
+            git pull https://${{ secrets.CLONE_TOKEN}}@github.com/SoftwareEgnineering2-Assignment/se2-backend-group-24 ci-dev
             bash -ci 'npm install'
             bash -ci 'pm2 restart se2-backend-group-24'
           
