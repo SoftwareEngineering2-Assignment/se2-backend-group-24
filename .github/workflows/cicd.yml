@@ -22,21 +22,21 @@ jobs:
         run: npm install
       - name: Run test
         run: npm test
-#  cd:
-#    runs-on: ubuntu-latest
-#    needs: ci
-#    if: github.ref == 'refs/heads/main'
-#    steps:
-#      - uses: appleboy/ssh-action@master
-#        with: 
-#          host: ${{ secrets.SSH_HOST}}
-#          username: ${{ secrets.SSH_USERNAME}}
-#          port: ${{ secrets.SSH_PORT}}
-#          password: ${{ secrets.SSH_PASSWORD}}
-#          script: |
-#            cd ~/se2/24/se2-backend-group-24
-#            git reset --hard origin/main
-#            git pull https://${{ secrets.CLONE_TOKEN}}@github.com/SoftwareEgnineering2-Assignment/se2-backend-group-24 main
-#            bash -ci 'npm install'
-#            bash -ci 'pm2 restart se2-backend-group-24'
+  cd:
+    runs-on: ubuntu-latest
+    needs: ci
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: appleboy/ssh-action@master
+        with: 
+          host: ${{ secrets.SSH_HOST}}
+          username: ${{ secrets.SSH_USERNAME}}
+          port: ${{ secrets.SSH_PORT}}
+          password: ${{ secrets.SSH_PASSWORD}}
+          script: |
+            cd ~/se2/24/se2-backend-group-24
+            git reset --hard origin/main
+            git pull https://${{ secrets.CLONE_TOKEN}}@github.com/SoftwareEgnineering2-Assignment/se2-backend-group-24 main
+            bash -ci 'npm install'
+            bash -ci 'pm2 restart se2-backend-group-24'
           
