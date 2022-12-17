@@ -29,10 +29,10 @@ jobs:
     steps:
       - uses: appleboy/ssh-action@master
         with: 
-          host: ${{ secrets.SSH_HOST}}
-          username: ${{ secrets.SSH_USERNAME}}
-          port: ${{ secrets.SSH_PORT}}
-          password: ${{ secrets.SSH_PASSWORD}}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          port: ${{ secrets.SSH_PORT }}
+          password: ${{ secrets.SSH_PASSWORD }}
           script: |
             cd ~/se2/24/se2-backend-group-24
             git reset --hard origin/main
