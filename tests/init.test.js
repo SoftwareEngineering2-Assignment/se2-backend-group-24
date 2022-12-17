@@ -31,3 +31,9 @@ test('GET /sources returns correct response and status code', async (t) => {
   const {statusCode} = await t.context.got(`sources/sources?token=${token}`);
   t.is(statusCode, 200);
 });
+
+test('GET /dasboards returns correct response and status code without token', async (t) => {
+  const {statusCode} = await t.context.got(`dashboards/dashboards`);
+  t.is(statusCode, 403);
+});
+
