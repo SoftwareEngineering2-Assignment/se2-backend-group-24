@@ -37,3 +37,10 @@ test('GET /dasboards returns correct response and status code without token', as
   t.is(statusCode, 403);
 });
 
+
+test('GET /dasboards returns correct response and status code with token', async (t) => {
+  const token = jwtSign({id: 2});
+  const {body} = await t.context.got(`dashboards/dashboards?token=${token}`);
+  console.log(body);
+   t.assert(body.success);
+});
