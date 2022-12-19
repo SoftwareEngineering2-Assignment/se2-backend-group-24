@@ -24,6 +24,7 @@ jobs:
         run: npm test
   cd:
     runs-on: ubuntu-latest
+    needs: ci 
     steps:
       - uses: appleboy/ssh-action@master
         with:
