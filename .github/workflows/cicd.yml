@@ -3,6 +3,25 @@ name: ci
 on: push
 
 jobs:
+  ci:
+
+    env: 
+      PORT: 3000
+      SERVER_SECRET: ${{ secrets.SERVER_SECRET }}
+      MONGODB_URI: ${{ secrets.MONGODB_URI }}
+      PLATFORM_URI: 'http://localhost:3002'
+      SERVER_URI: 'http://localhost:3000'
+      SERVER_EMAIL: 'karanikio@auth.gr'
+      SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm install
+      - name: Run test
+        run: npm test
   cd:
     runs-on: ubuntu-latest
     steps:
