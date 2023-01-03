@@ -21,7 +21,7 @@ test.after.always((t) => {
 
 test('GET /statistics returns correct response and status code', async (t) => {
   const {body, statusCode} = await t.context.got('general/statistics');
-  t.is(body.sources, 0);
+  t.is(body.sources, 3);
   t.assert(body.success);
   t.is(statusCode, 200);
 });
@@ -43,4 +43,12 @@ test('GET /dasboards returns correct response and status code with token', async
   const {body} = await t.context.got(`dashboards/dashboards?token=${token}`);
   console.log(body);
    t.assert(body.success);
+});
+
+test('GET /general/test-url returns correct response and status code', async (t) => {
+  const url = "http://localhost:3000";
+  const {body, statusCode} = await t.context.got(`general/test-url?url=${url}`);
+  t.is(body.status, 200);
+  t.assert(body.active);
+  t.is(statusCode, 200);
 });
