@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// configuration options for mongodb 
 const mongooseOptions = {
   useNewUrlParser: true,
   useCreateIndex: true,
@@ -11,6 +12,7 @@ const mongooseOptions = {
 };
 const mongodbUri = process.env.MONGODB_URI;
   
+// connect to the database  the specified options
 module.exports = () => {
   // eslint-disable-next-line no-console
   mongoose.connect(mongodbUri, mongooseOptions).catch(console.error);
