@@ -3,6 +3,7 @@ const {path, ifElse, isNil, startsWith, slice, identity, pipe} = require('ramda'
 
 const secret = process.env.SERVER_SECRET;
 
+// r -> request
 module.exports = (req, res, next) => {
   /**
      * @name authorization
@@ -10,16 +11,22 @@ module.exports = (req, res, next) => {
     */
   pipe(
     (r) =>
-      path(['query', 'token'], r)
-          || path(['headers', 'x-access-token'], r)
-          || path(['headers', 'authorization'], r),
+    // takes the token from the request query
+    // or takes the token from the request header
+      path(['query', 'token'], r)                     
+          || path(['headers', 'x-access-token'], r)   
+          || path(['headers', 'authorization'], r),   
     ifElse(
-      (t) => !isNil(t) && startsWith('Bearer ', t),
-      (t) => slice(7, t.length, t).trimLeft(),
-      identity
+    // if t is not null AND starts with 'Bearer
+    // then hold index 7 until the end and Removes
+      (t) => !isNil(t) && startsWith('Bearer ', t),   
+      (t) => slice(7, t.length, t).trimLeft(),         
+      identity                                         
     ),
     ifElse(
-      isNil,
+      // if token is null message missing
+      // else check for expiration or verification error 
+      isNil,                                          
       () =>
         next({
           message: 'Authorization Error: token missing.',
@@ -28,7 +35,7 @@ module.exports = (req, res, next) => {
       (token) =>
         jwt.verify(token, secret, (e, d) =>
           ifElse(
-            (err) => !isNil(err),
+            (err) => !isNil(err),                    
             (er) => {
               if (er.name === 'TokenExpiredError') {
                 next({
@@ -41,6 +48,7 @@ module.exports = (req, res, next) => {
                 status: 403
               });
             },
+            // if there is no error decode the token 
             (_, decoded) => {
               req.decoded = decoded;
               return next();
