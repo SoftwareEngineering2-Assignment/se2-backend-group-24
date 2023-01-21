@@ -62,4 +62,17 @@ test('GET /general/test-url returns correct response and status code', async (t)
   t.is(body.status, 200);
   t.assert(body.active);
   t.is(statusCode, 200);
+
+});
+
+test('POST /users/create with empty body to test validation middleware', async (t) => {
+  const body = await t.context.got.post(`users/create`).json();
+  t.is(body.status, 400);
+});
+
+test('POST /users/create with body to test validation middleware', async (t) => {
+const body = await t.context.got.post(`users/create`, {
+  json: {"username":"maria","password":"12345","confirm":"12345","email":"adfa@adfa.com"}
+}).json();
+t.is(body.status, 409);
 });
