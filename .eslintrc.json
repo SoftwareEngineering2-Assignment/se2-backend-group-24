@@ -29,6 +29,7 @@
     "no-multiple-empty-lines": "warn",
     "no-param-reassign": 0,
     "key-spacing": "warn",
+    "linebreak-style": "off",
     "no-unused-vars": [
       "error",
       {
