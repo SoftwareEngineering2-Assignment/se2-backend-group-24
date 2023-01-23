@@ -76,3 +76,55 @@ const body = await t.context.got.post(`users/create`, {
 }).json();
 t.is(body.status, 409);
 });
+
+test('POST /dashboards/create-dashboard test dashboard routes', async (t) => {   
+  const token = jwtSign({id: 3});
+  const name = 'tester';
+const body = await t.context.got.post(`dashboards/create-dashboard?token=${token}`, {
+    json: {name}
+  }).json();
+  //if the dashboard already exists
+  if (body.status) {
+    t.is(body.status, 409);
+  }
+  //if dashboard doesn't exist 
+  else {
+    t.assert(body.success);
+  }
+});
+
+
+test('POST /dashboards/delete-dashboard test dashboard routes', async (t) => {   
+  const token = jwtSign({id: 3});
+  const id = '63cd0cbb95333e63f4896781';
+const body = await t.context.got.post(`dashboards/delete-dashboard?token=${token}`, {
+    json: {id}
+  }).json();
+
+  //if the dashboard has not been found
+  if (body.status) {
+    t.is(body.status, 409);
+  }
+  //if dashboard deleted succesfully 
+  else {
+    t.assert(body.success);
+  }
+});
+
+test('POST /dashboards/check-password test dashboard routes', async (t) => {   
+  const token = jwtSign({id: 3});
+  const id = '63cd0cbb95333e63f4896781';
+  const password = 12345;
+const body = await t.context.got.post(`dashboards/check-password?token=${token}`, {
+    json: {id, password}
+  }).json();
+
+  //if the dashboard has not been found
+  if (body.status) {
+    t.is(body.status, 409);
+  }
+  //if dashboard deleted succesfully 
+  else {
+    t.assert(body.success);
+  }
+});
