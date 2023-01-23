@@ -110,3 +110,21 @@ const body = await t.context.got.post(`dashboards/delete-dashboard?token=${token
     t.assert(body.success);
   }
 });
+
+test('POST /dashboards/check-password test dashboard routes', async (t) => {   
+  const token = jwtSign({id: 3});
+  const id = '63cd0cbb95333e63f4896781';
+  const password = 12345;
+const body = await t.context.got.post(`dashboards/check-password?token=${token}`, {
+    json: {id, password}
+  }).json();
+
+  //if the dashboard has not been found
+  if (body.status) {
+    t.is(body.status, 409);
+  }
+  //if dashboard deleted succesfully 
+  else {
+    t.assert(body.success);
+  }
+});
