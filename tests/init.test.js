@@ -76,3 +76,19 @@ const body = await t.context.got.post(`users/create`, {
 }).json();
 t.is(body.status, 409);
 });
+
+test('POST /dashboards/create-dashboard test dashboard routes', async (t) => {   
+  const token = jwtSign({id: 3});
+  const name = 'tester';
+const body = await t.context.got.post(`dashboards/create-dashboard?token=${token}`, {
+    json: {name}
+  }).json();
+  //if the dashboard already exists
+  if (body.status) {
+    t.is(body.status, 409);
+  }
+  //if dashboard doesn't exist 
+  else {
+    t.assert(body.success);
+  }
+});
