@@ -1,8 +1,10 @@
+// mongo reset schema 
 /* eslint-disable func-names */
 const mongoose = require('mongoose');
 const beautifyUnique = require('mongoose-beautiful-unique-validation');
 const {constants: {expires}} = require('../utilities/validation');
 
+// define reset schema
 const ResetSchema = new mongoose.Schema({
   username: {
     index: true,
@@ -23,8 +25,8 @@ const ResetSchema = new mongoose.Schema({
 });
 
 // Plugin for Mongoose that turns duplicate errors into regular Mongoose validation errors.
-
 ResetSchema.plugin(beautifyUnique);
 
+//disables pluralize collection names automatically
 mongoose.pluralize(null);
 module.exports = mongoose.model('reset-tokens', ResetSchema);

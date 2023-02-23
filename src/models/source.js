@@ -1,9 +1,12 @@
+// mongo source schema 
 /* eslint-disable func-names */
 const mongoose = require('mongoose');
 const beautifyUnique = require('mongoose-beautiful-unique-validation');
 
+//disables pluralize collection names automatically
 mongoose.pluralize(null);
 
+//define source schema
 const SourceSchema = new mongoose.Schema(
   {
     name: {
@@ -25,11 +28,9 @@ const SourceSchema = new mongoose.Schema(
 );
 
 // Plugin for Mongoose that turns duplicate errors into regular Mongoose validation errors.
-
 SourceSchema.plugin(beautifyUnique);
 
 // Pre save hook that hashes passwords
-
 SourceSchema.pre('save', function (next) {
   if (this.isModified('name')) {
     this.createdAt = Date.now();

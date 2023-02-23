@@ -1,11 +1,14 @@
+// // mongo user schema 
 /* eslint-disable func-names */
 const mongoose = require('mongoose');
 const beautifyUnique = require('mongoose-beautiful-unique-validation');
 const {passwordDigest, comparePassword} = require('../utilities/authentication/helpers');
 const {constants: {min}} = require('../utilities/validation');
 
+//disables pluralize collection names automatically
 mongoose.pluralize(null);
 
+//definition of user schema
 const UserSchema = new mongoose.Schema(
   {
     email: {
@@ -32,11 +35,9 @@ const UserSchema = new mongoose.Schema(
 );
 
 // Plugin for Mongoose that turns duplicate errors into regular Mongoose validation errors.
-
 UserSchema.plugin(beautifyUnique);
 
 // Pre save hook that hashes passwords
-
 UserSchema.pre('save', function (next) {
   if (this.isModified('password')) {
     this.password = passwordDigest(this.password);
@@ -48,7 +49,6 @@ UserSchema.pre('save', function (next) {
 });
 
 // Model method that compares hashed passwords
-
 UserSchema.methods.comparePassword = function (password) {
   return comparePassword(password, this.password);
 };
