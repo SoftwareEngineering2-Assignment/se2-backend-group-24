@@ -168,7 +168,6 @@ router.post('/source',
     }
   });
 
-// Get information about a source 
 router.post('/check-sources',
   authorization,
   async (req, res, next) => {

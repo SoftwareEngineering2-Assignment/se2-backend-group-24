@@ -8,11 +8,15 @@ const User = require('../models/user');
 const Dashboard = require('../models/dashboard');
 const Source = require('../models/source');
 
+// Route to get statistics of the database 
 router.get('/statistics',
   async (req, res, next) => {
     try {
+      // Get the total number of users in the database
       const users = await User.countDocuments();
+      // Get the total number of dashboards in the database
       const dashboards = await Dashboard.countDocuments();
+      // Get the total number of views for all dashboards
       const views = await Dashboard.aggregate([
         {
           $group: {
@@ -21,13 +25,16 @@ router.get('/statistics',
           }
         }
       ]);
+      // Get the total number of sources in the database
       const sources = await Source.countDocuments();
 
+      // Calculate the total number of views
       let totalViews = 0;
       if (views[0] && views[0].views) {
         totalViews = views[0].views;
       }
 
+      // Return the statistics as a JSON response
       return res.json({
         success: true,
         users,
@@ -40,11 +47,12 @@ router.get('/statistics',
     }
   });
 
+// A route to test the status of a given URL
 router.get('/test-url',
   async (req, res) => {
     try {
       const {url} = req.query;
-      const {statusCode} = await got(url);
+      const {statusCode} = await got(url); // make a request to the url
       return res.json({
         status: statusCode,
         active: (statusCode === 200),
@@ -57,14 +65,15 @@ router.get('/test-url',
     }
   });
 
+// A route to make a request to a given URL with optional parameters
 router.get('/test-url-request',
   async (req, res) => {
     try {
-      const {url, type, headers, body: requestBody, params} = req.query;
+      const {url, type, headers, body: requestBody, params} = req.query; // get parameters from the request
 
       let statusCode;
       let body;
-      switch (type) {
+      switch (type) { // determine request type (GET, POST, PUT)
         case 'GET':
           ({statusCode, body} = await got(url, {
             headers: headers ? JSON.parse(headers) : {},
