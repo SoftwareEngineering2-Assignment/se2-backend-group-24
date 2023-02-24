@@ -30,20 +30,39 @@ test('GET /statistics returns correct response and status code', async (t) => {
   t.is(statusCode, 200);
 });
 
-
-// test the get request of sources/sources
-// using a token we expect statusCode 200 
-test('GET /sources returns correct response and status code', async (t) => {
-  const token = jwtSign({id: 1});
-  const {statusCode} = await t.context.got(`sources/sources?token=${token}`);
-  t.is(statusCode, 200);
-});
-
 // test the get request of dashboards/dashboards to test the authentication middleware  
 // without using a token we expect statusCode 403
 test('GET /dasboards returns correct response and status code without token', async (t) => {
   const {statusCode} = await t.context.got(`dashboards/dashboards`);
   t.is(statusCode, 403);
+});
+
+// test for the route dashboards/check-password with a dashboard that doesn't exists
+test('POST /check-password', async (t) => {
+  const token = jwtSign({id: 1});
+  const {body} = await t.context.got.post(`dashboards/check-password?token=${token}&name=dummy`);
+  t.is(body.status,409);
+});
+
+// test for the route dashboards/share-dashboard with a dashboard that doesn't exists
+test('POST /share-dashboard', async (t) => {
+  const token = jwtSign({id: 1});
+  const {body} = await t.context.got.post(`dashboards/share-dashboard?token=${token}&name=dummy`);
+  t.is(body.status,409);
+});
+
+// test for the route dashboards/change-password with a dashboard that doesn't exists
+test('POST /change-password', async (t) => {
+  const token = jwtSign({id: 1});
+  const {body} = await t.context.got.post(`dashboards/change-password?token=${token}`);
+  t.is(body.status,409);
+});
+
+// test for /dashboards/dashboard without specifing the id
+test('GET /dashboard that is not specified', async (t) => {
+  const token = jwtSign({id: 1});
+  const {body} = await t.context.got(`dashboards/dashboard?token=${token}`);
+  t.is(body.status,409);
 });
 
 // test the get request of dashboards/dashboards to test the authentication middleware  
@@ -52,29 +71,6 @@ test('GET /dasboards returns correct response and status code with token', async
   const token = jwtSign({id: 2});
   const {body} = await t.context.got(`dashboards/dashboards?token=${token}`);
   t.assert(body.success);
-});
-
-// test the get request of general/test-url
-// using the http://localhost:3000 test url
-test('GET /general/test-url returns correct response and status code', async (t) => {
-  const url = "http://localhost:3000";
-  const {body, statusCode} = await t.context.got(`general/test-url?url=${url}`);
-  t.is(body.status, 200);
-  t.assert(body.active);
-  t.is(statusCode, 200);
-
-});
-
-test('POST /users/create with empty body to test validation middleware', async (t) => {
-  const body = await t.context.got.post(`users/create`).json();
-  t.is(body.status, 400);
-});
-
-test('POST /users/create with body to test validation middleware', async (t) => {
-const body = await t.context.got.post(`users/create`, {
-  json: {"username":"maria","password":"12345","confirm":"12345","email":"adfa@adfa.com"}
-}).json();
-t.is(body.status, 409);
 });
 
 test('POST /dashboards/create-dashboard test dashboard routes', async (t) => {   
@@ -91,8 +87,8 @@ const body = await t.context.got.post(`dashboards/create-dashboard?token=${token
   else {
     t.assert(body.success);
   }
-});
 
+});
 
 test('POST /dashboards/delete-dashboard test dashboard routes', async (t) => {   
   const token = jwtSign({id: 3});
@@ -127,4 +123,68 @@ const body = await t.context.got.post(`dashboards/check-password?token=${token}`
   else {
     t.assert(body.success);
   }
+});
+
+
+// test the get request of sources/sources
+// using a token we expect statusCode 200 
+test('GET /sources returns correct response and status code', async (t) => {
+  const token = jwtSign({id: 1});
+  const {statusCode} = await t.context.got(`sources/sources?token=${token}`);
+  t.is(statusCode, 200);
+});
+
+// test for the route sources/change-source with a dashboard that doesn't exists
+test('POST /change-source', async (t) => {
+  const token = jwtSign({id: 1});
+  const {body} = await t.context.got.post(`sources/change-source?token=${token}`);
+  t.is(body.status,409);
+});
+
+// test for the route sources/delete-source with a dashboard that doesn't exists
+test('POST /delete-source', async (t) => {
+  const token = jwtSign({id: 1});
+  const {body} = await t.context.got.post(`sources/delete-source?token=${token}`);
+  t.is(body.status,409);
+});
+
+// test for the route sources/source with a dashboard that doesn't exists
+test('POST sources/source', async (t) => {
+  const token = jwtSign({id: 1});
+  const {body} = await t.context.got.post(`sources/source?token=${token}`);
+  t.is(body.status,409);
+});
+
+// test the get request of general/test-url
+// using the http://localhost:3000 test url
+test('GET /general/test-url returns correct response and status code', async (t) => {
+  const url = "http://localhost:3000";
+  const {body, statusCode} = await t.context.got(`general/test-url?url=${url}`);
+  t.is(body.status, 200);
+  t.assert(body.active);
+  t.is(statusCode, 200);
+
+});
+
+test('POST /users/create with empty body to test validation middleware', async (t) => {
+  const body = await t.context.got.post(`users/create`).json();
+  t.is(body.status, 400);
+});
+
+test('POST /users/create with body to test validation middleware', async (t) => {
+const body = await t.context.got.post(`users/create`, {
+  json: {"username":"maria","password":"12345","confirm":"12345","email":"adfa@adfa.com"}
+}).json();
+t.is(body.status, 409);
+});
+
+test('POST users/authenticate with body to test validation middleware', async (t) => {
+  const {body} = await t.context.got.post(`users/authenticate`)
+  t.is(body.status, 400);
+});
+
+// test the route /users/resetpassword
+test('POST users/resetpassword with body to test validation middleware', async (t) => {
+  const {body} = await t.context.got.post(`users/resetpassword`)
+  t.is(body.status, 400);
 });
